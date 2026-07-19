@@ -119,7 +119,15 @@ export default function GameCanvas() {
       // ----------------------------------------------------
       // Flow Step 6: Render Scene Layers (Planks, Particles, Bullets, Doodle)
       // ----------------------------------------------------
-      plankRenderer.current.draw(ctx, store.platforms, scrollY, window.innerHeight, store.doodle.heldPlankId, store.doodle.heldTimer);
+      plankRenderer.current.draw(
+        ctx,
+        store.platforms,
+        scrollY,
+        window.innerHeight,
+        store.doodle.heldPlankId,
+        store.doodle.heldTimer,
+        store.theme
+      );
 
       // Render Falling Planks
       for (const fp of store.fallingPlanks) {
@@ -131,7 +139,7 @@ export default function GameCanvas() {
         ctx.save();
         ctx.globalAlpha = fl.opacity;
         ctx.font = fl.font;
-        ctx.fillStyle = fl.color;
+        ctx.fillStyle = store.theme === "dark" || store.theme === "blueprint" ? "#F8FAFC" : fl.color;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.translate(fl.x, fl.y - scrollY);
@@ -141,9 +149,11 @@ export default function GameCanvas() {
       }
 
       // Render Bullets
-      for (const bean of useGameStore.getState().beans) {
-        ctx.fillStyle = "#8BC34A";
-        ctx.strokeStyle = "#558B2F";
+      const bulletFill = store.theme === "dark" ? "#4ADE80" : store.theme === "blueprint" ? "#FACC15" : "#8BC34A";
+      const bulletStroke = store.theme === "dark" ? "#15803D" : store.theme === "blueprint" ? "#CA8A04" : "#558B2F";
+      for (const bean of store.beans) {
+        ctx.fillStyle = bulletFill;
+        ctx.strokeStyle = bulletStroke;
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.arc(bean.pos.x, bean.pos.y - scrollY, C.BEAN_SIZE, 0, Math.PI * 2);

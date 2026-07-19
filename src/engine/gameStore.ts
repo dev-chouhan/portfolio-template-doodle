@@ -16,6 +16,8 @@ export interface Bean {
   vel: Vector2;
 }
 
+export type ThemeMode = "light" | "dark" | "blueprint";
+
 /**
  * Single Responsibility (SRP): Holds global reactive state for Doodle, platforms, and particles.
  */
@@ -31,6 +33,7 @@ export interface GameStoreState {
   activeSection: string | null;
   normalScrollMode: boolean;
   worldHeight: number;
+  theme: ThemeMode;
   fallingPlanks: Array<{
     id: string;
     rect: AABB;
@@ -82,9 +85,24 @@ export interface GameStoreActions {
   setWorldHeight: (h: number) => void;
   /** Toggles standard scroll mode vs game camera scroll */
   toggleScrollMode: () => void;
+  /** Sets active theme mode */
+  setTheme: (t: ThemeMode) => void;
+  /** Cycles through available themes (light -> dark -> blueprint -> light) */
+  cycleTheme: () => void;
   /** Triggers plank collapse animation and disables collision */
   breakPlank: (id: string) => void;
 }
+
+const getInitialTheme = (): ThemeMode => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("doodle_portfolio_theme") as ThemeMode | null;
+    if (saved && ["light", "dark", "blueprint"].includes(saved)) {
+      document.documentElement.setAttribute("data-theme", saved);
+      return saved;
+    }
+  }
+  return "light";
+};
 
 export const useGameStore = create<GameStoreState & GameStoreActions>((set, get) => ({
   doodle: DoodleBody.create(100, 200),
@@ -96,6 +114,7 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
   activeSection: null,
   normalScrollMode: false,
   worldHeight: 8000,
+  theme: getInitialTheme(),
 
   fallingPlanks: [],
   fallingLetters: [],
@@ -106,6 +125,22 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
   setPlatforms: (p) => set({ platforms: p }),
   setInput: (partial) =>
     set((s) => ({ input: { ...s.input, ...partial } })),
+  setTheme: (t) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("doodle_portfolio_theme", t);
+      document.documentElement.setAttribute("data-theme", t);
+    }
+    set({ theme: t });
+  },
+  cycleTheme: () => {
+    const current = get().theme;
+    const next: ThemeMode = current === "light" ? "dark" : current === "dark" ? "blueprint" : "light";
+    if (typeof window !== "undefined") {
+      localStorage.setItem("doodle_portfolio_theme", next);
+      document.documentElement.setAttribute("data-theme", next);
+    }
+    set({ theme: next });
+  },
 
   /**
    * Spawns an upward projectile from Doodle's center coordinate.

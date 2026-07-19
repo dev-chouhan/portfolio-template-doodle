@@ -23,7 +23,8 @@ export class PlankRenderer {
     scrollY: number,
     viewportH: number,
     heldPlankId?: string | null,
-    heldTimer?: number
+    heldTimer?: number,
+    theme: string = "light"
   ): void {
     for (const plat of platforms) {
       const screenY = plat.rect.top - scrollY;
@@ -32,7 +33,7 @@ export class PlankRenderer {
       
       // Step 2: Draw platform if type is plank
       if (plat.type === "plank") {
-        this.drawPlank(ctx, plat, scrollY, heldPlankId, heldTimer);
+        this.drawPlank(ctx, plat, scrollY, heldPlankId, heldTimer, theme);
       }
     }
   }
@@ -41,7 +42,7 @@ export class PlankRenderer {
    * Renders an individual plank platform with rounded corners, shake feedback, and crack overlays.
    * Navigation Flow:
    * 1. Calculate Screen Coordinates & Apply Shake Displacement
-   * 2. Configure Fill & Stroke Styles (Green body, Brown cracks)
+   * 2. Configure Fill & Stroke Styles (Theme-adapted green/cyan body, crack lines)
    * 3. Draw Rounded Rectangle Body Path
    * 4. Overlay Crack Lines (if broken) or Top Highlight (if normal)
    */
@@ -50,7 +51,8 @@ export class PlankRenderer {
     plat: IPlatform,
     scrollY: number,
     heldPlankId?: string | null,
-    heldTimer?: number
+    heldTimer?: number,
+    theme: string = "light"
   ): void {
     let x = plat.rect.x;
     let y = plat.rect.top - scrollY;
@@ -69,9 +71,26 @@ export class PlankRenderer {
 
     const isBroken = plat.isBroken || false;
 
-    // Step 2: Configure green platform colors
-    ctx.fillStyle = "#8BC34A";
-    ctx.strokeStyle = "#33691E";
+    // Step 2: Configure theme-aware platform colors
+    let fillColor = "#8BC34A";
+    let strokeColor = "#33691E";
+    let highlightColor = "#C5E1A5";
+    let crackColor = "#5D4037";
+
+    if (theme === "dark") {
+      fillColor = "#4ADE80";
+      strokeColor = "#14532D";
+      highlightColor = "#86EFAC";
+      crackColor = "#0F172A";
+    } else if (theme === "blueprint") {
+      fillColor = "#38BDF8";
+      strokeColor = "#0369A1";
+      highlightColor = "#BAE6FD";
+      crackColor = "#0F2B5C";
+    }
+
+    ctx.fillStyle = fillColor;
+    ctx.strokeStyle = strokeColor;
     ctx.lineWidth = 2.0;
 
     // Step 3: Draw rounded rectangle path
@@ -92,7 +111,7 @@ export class PlankRenderer {
 
     // Step 4: Overlay cracks for broken planks or highlight for normal planks
     if (isBroken) {
-      ctx.strokeStyle = "#5D4037";
+      ctx.strokeStyle = crackColor;
       ctx.lineWidth = 2.0;
       ctx.beginPath();
       ctx.moveTo(x + w / 2, y);
@@ -101,7 +120,7 @@ export class PlankRenderer {
       ctx.lineTo(x + w / 2, y + h);
       ctx.stroke();
     } else {
-      ctx.strokeStyle = "#C5E1A5";
+      ctx.strokeStyle = highlightColor;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(x + 4, y + 2);

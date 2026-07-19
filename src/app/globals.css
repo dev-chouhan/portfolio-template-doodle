@@ -1,31 +1,155 @@
 @import "tailwindcss";
 
+:root {
+  --bg-color: #FFFEF7;
+  --grid-color: rgba(139, 195, 74, 0.05);
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-accent: #16A34A;
+  --active-text: #15803D;
+  --hud-bg: #F0FDF4;
+  --hud-border: #86EFAC;
+  --hud-text: #166534;
+  --hud-hover: #DCFCE7;
+  --selection-bg: #8BC34A;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1C2536;
+  --grid-color: rgba(74, 222, 128, 0.09);
+  --text-primary: #FFFFFF;
+  --text-secondary: #CBD5E1;
+  --text-accent: #4ADE80;
+  --active-text: #38BDF8;
+  --hud-bg: #273449;
+  --hud-border: #475569;
+  --hud-text: #4ADE80;
+  --hud-hover: #334155;
+  --selection-bg: #22C55E;
+}
+
+[data-theme="blueprint"] {
+  --bg-color: #0F2B5C;
+  --grid-color: rgba(255, 255, 255, 0.1);
+  --text-primary: #FFFFFF;
+  --text-secondary: #BFDBFE;
+  --text-accent: #38BDF8;
+  --active-text: #FACC15;
+  --hud-bg: #1E3A8A;
+  --hud-border: #3B82F6;
+  --hud-text: #E0F2FE;
+  --hud-hover: #1D4ED8;
+  --selection-bg: #0284C7;
+}
+
 @layer base {
   html {
     scroll-behavior: auto;
     overflow-x: hidden;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
     font-family: var(--font-fredoka), sans-serif;
-    /* Doodle Jump style - light cream/paper background */
-    background-color: #FFFEF7;
+    background-color: var(--bg-color);
     background-image: 
-      linear-gradient(rgba(139, 195, 74, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 195, 74, 0.03) 1px, transparent 1px);
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 20px 20px;
+    color: var(--text-primary);
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   ::selection {
-    background: #8BC34A;
+    background: var(--selection-bg);
     color: #fff;
   }
 
   .doodle-active-text {
     display: inline-block;
-    color: #689F38 !important;
+    color: var(--active-text) !important;
     transform: scale(1.05);
     transition: color 0.2s ease, transform 0.2s ease;
   }
 }
+
+/* ----------------------------------------------------
+   Theme Overrides for Portfolio Section Text, Titles & Inputs
+   ---------------------------------------------------- */
+[data-theme="dark"] body,
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="blueprint"] body,
+[data-theme="blueprint"] main,
+[data-theme="blueprint"] section,
+[data-theme="blueprint"] h1,
+[data-theme="blueprint"] h2,
+[data-theme="blueprint"] h3,
+[data-theme="blueprint"] h4 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-900,
+[data-theme="blueprint"] .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-800,
+[data-theme="blueprint"] .text-gray-800,
+[data-theme="dark"] .text-gray-700,
+[data-theme="blueprint"] .text-gray-700,
+[data-theme="dark"] .text-gray-600,
+[data-theme="blueprint"] .text-gray-600,
+[data-theme="dark"] .text-gray-500,
+[data-theme="blueprint"] .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-400,
+[data-theme="blueprint"] .text-gray-400 {
+  color: var(--text-secondary) !important;
+  opacity: 0.85;
+}
+
+[data-theme="dark"] .text-green-600,
+[data-theme="blueprint"] .text-green-600 {
+  color: var(--text-accent) !important;
+}
+
+[data-theme="dark"] .bg-green-50\/30,
+[data-theme="blueprint"] .bg-green-50\/30 {
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="blueprint"] input,
+[data-theme="blueprint"] textarea {
+  background-color: var(--hud-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--hud-border) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="blueprint"] input::placeholder,
+[data-theme="blueprint"] textarea::placeholder {
+  color: var(--text-secondary) !important;
+  opacity: 0.7;
+}
+
+[data-theme="blueprint"] button.bg-green-600,
+[data-theme="dark"] button.bg-green-600 {
+  background-color: var(--text-accent) !important;
+  color: #0F172A !important;
+  font-weight: bold;
+}
+
+
