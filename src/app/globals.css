@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: var(--font-fredoka), sans-serif;
+    /* Doodle Jump style - light cream/paper background */
+    background-color: #FFFEF7;
+    background-image: 
+      linear-gradient(rgba(139, 195, 74, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 195, 74, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: #8BC34A;
+    color: #fff;
+  }
+
+  .doodle-active-text {
+    display: inline-block;
+    color: #689F38 !important;
+    transform: scale(1.05);
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+}
